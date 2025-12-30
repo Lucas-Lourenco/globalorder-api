@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  # O Banco de Dados
+  mongodb:
+    image: mongo:latest
+    container_name: global_order_db
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo_data:/data/db
+
+  # O motor das filas (Redis)
+  redis:
+    image: redis:latest
+    container_name: global_order_redis
+    ports:
+      - 6379:6379
+
+volumes:
+  mongo_data:
