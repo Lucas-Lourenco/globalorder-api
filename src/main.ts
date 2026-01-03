@@ -1,10 +1,21 @@
 import { NestFactory } from '@nestjs/core';
+import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { AppModule } from './app.module';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { join } from 'path';
+import * as helmet from 'helmet';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+
+  
+  app.use(helmet.default());
+  app.enableCors();
+
+  app.useStaticAssets(join(__dirname, '..', 'uploads'), {
+    prefix: '/uploads/',
+  });
 
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true,
@@ -12,20 +23,15 @@ async function bootstrap() {
     transform: true,
   }));
 
-  const config = new DocumentBuilder()
-    .setTitle('GlobalOrder API')
-    .setDescription('API para gerenciamento de clientes e pedidos')
-    .setVersion('1.0')
-    .addTag('Clientes')
-    .addTag('Pedidos')
-    .build();
-
-  const document = SwaggerModule.createDocument(app, config);
   
+  const config = new DocumentBuilder()
+    .setTitle('API de Pedidos')
+    .setDescription('Projeto Backend Júnior - NestJS, Mongo, Redis')
+    .setVersion('1.0')
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
   await app.listen(3000);
-  console.log(`🚀 Aplicação rodando em: http://localhost:3000`);
-  console.log(`📃 Documentação Swagger em: http://localhost:3000/api`);
 }
 bootstrap();
