@@ -142,7 +142,7 @@ npm run start:dev
 
 A API estará disponível em: `http://localhost:3000`
 
-Acesse a documentação Swagger em: `http://localhost:3000/api/docs`
+Acesse a documentação Swagger em: `http://localhost:3000/api`
 
 ## 📁 Estrutura do Projeto
 
