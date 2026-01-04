@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException, InternalServerErrorException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Customer } from './schemas/customer.schema';
@@ -9,13 +9,19 @@ import { UpdateCustomerDto } from './dto/update-customer.dto';
 export class CustomersService {
   constructor(
     @InjectModel(Customer.name) private customerModel: Model<Customer>,
-  ) {}
+  ) { }
 
   async create(createCustomerDto: CreateCustomerDto): Promise<Customer> {
 
     const createdCustomer = new this.customerModel(createCustomerDto);
-
-    return createdCustomer.save();
+    try {
+      return await createdCustomer.save();
+    } catch (error) {
+      if (error.code === 11000) {
+        throw new ConflictException('Este e-mail já está cadastrado.');
+      }
+      throw new InternalServerErrorException('Erro ao criar cliente.');
+    }
   }
 
   async findAll(): Promise<Customer[]> {
@@ -38,20 +44,20 @@ export class CustomersService {
   }
 
   async update(id: string, updateCustomerDto: UpdateCustomerDto): Promise<Customer> {
-  const updatedCustomer = await this.customerModel
-    .findByIdAndUpdate(id, updateCustomerDto, { new: true })
-    .exec();
+    const updatedCustomer = await this.customerModel
+      .findByIdAndUpdate(id, updateCustomerDto, { new: true })
+      .exec();
 
-  if (!updatedCustomer) {
-    throw new NotFoundException(`Cliente com ID ${id} não encontrado`);
+    if (!updatedCustomer) {
+      throw new NotFoundException(`Cliente com ID ${id} não encontrado`);
+    }
+    return updatedCustomer;
   }
-  return updatedCustomer;
-}
 
   async remove(id: string): Promise<void> {
 
     const result = await this.customerModel.findByIdAndDelete(id).exec();
-    
+
     if (!result) {
       throw new NotFoundException(`Cliente com ID ${id} não encontrado`);
     }
