@@ -66,6 +66,6 @@ export class OrdersController {
   async uploadComprovante(@Param('id') id: string, @UploadedFile() file: Express.Multer.File) {
     if (!file) throw new BadRequestException('Arquivo obrigatório!');
     const fileUrl = `http://localhost:3000/uploads/${file.filename}`;
-    return this.ordersService.update(id, { receiptUrl: fileUrl } as any);
+    return this.ordersService.update(id, { comprovanteURL: fileUrl } as any);
   }
 }

@@ -31,7 +31,7 @@ export class Order extends Document {
   totalAmountBRL: number;
 
   @Prop({ default: null })
-  receiptUrl: string;
+  comprovanteURL: string;
 }
 
 export const OrderSchema = SchemaFactory.createForClass(Order);
