@@ -7,15 +7,15 @@ export class CreateOrderItemDto {
   @ApiProperty({ example: 'Mouse Gamer RGB', description: 'Nome do produto' })
   @IsString()
   @IsNotEmpty()
-  product: string;
+  produto: string;
 
   @ApiProperty({ example: 2, description: 'Quantidade comprada' })
   @IsNumber()
-  quantity: number;
+  quantidade: number;
 
   @ApiProperty({ example: 50.00, description: 'Preço unitário em Dólares' })
   @IsNumber()
-  priceUnitPriceUSD: number;
+  precoUnitarioUSD: number;
 }
 
 export class CreateOrderDto {
@@ -25,30 +25,30 @@ export class CreateOrderDto {
     description: 'ID do Cliente (Copie do GET /clientes)' 
   })
   @IsMongoId()
-  customerId: string;
+  clienteId: string;
 
   @ApiProperty({ example: '2025-12-31', description: 'Data do pedido (AAAA-MM-DD)' })
   @IsDateString()
-  date: string;
+  data: string;
 
   @ApiProperty({ 
     type: [CreateOrderItemDto], 
     description: 'Lista de produtos',
     example: [
       {
-        product: "Mouse Gamer",
-        quantity: 2,
-        priceUnitPriceUSD: 50
+        produto: "Mouse Gamer",
+        quantidade: 2,
+        precoUnitarioUSD: 50
       },
       {
-        product: "Teclado Mecânico",
-        quantity: 1,
-        priceUnitPriceUSD: 100
+        produto: "Teclado Mecânico",
+        quantidade: 1,
+        precoUnitarioUSD: 100
       }
     ]
   })
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => CreateOrderItemDto)
-  items: CreateOrderItemDto[];
+  itens: CreateOrderItemDto[];
 }

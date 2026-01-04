@@ -42,9 +42,8 @@ export class OrdersController {
     return this.ordersService.remove(id);
   }
 
-  
   @Post(':id/comprovante')
-  @ApiOperation({ summary: 'Upload de comprovante (Salva em /uploads)' })
+  @ApiOperation({ summary: 'Upload de comprovante (PDF ou Imagem)' })
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     schema: {
@@ -55,6 +54,7 @@ export class OrdersController {
     },
   })
   @UseInterceptors(FileInterceptor('file', {
+    
     storage: diskStorage({
       destination: './uploads',
       filename: (req, file, cb) => {
@@ -62,10 +62,19 @@ export class OrdersController {
         cb(null, `${uniqueSuffix}${extname(file.originalname)}`);
       },
     }),
+    
+    fileFilter: (req, file, callback) => {
+      if (!file.originalname.match(/\.(jpg|jpeg|png|pdf)$/)) {
+        return callback(new BadRequestException('Apenas arquivos de imagem ou PDF são permitidos!'), false);
+      }
+      callback(null, true);
+    },
   }))
   async uploadComprovante(@Param('id') id: string, @UploadedFile() file: Express.Multer.File) {
     if (!file) throw new BadRequestException('Arquivo obrigatório!');
+    
     const fileUrl = `http://localhost:3000/uploads/${file.filename}`;
+    
     return this.ordersService.update(id, { comprovanteURL: fileUrl } as any);
   }
 }

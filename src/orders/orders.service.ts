@@ -21,14 +21,14 @@ export class OrdersService {
   async create(createOrderDto: CreateOrderDto): Promise<Order> {
     
   
-    const customer = await this.customerModel.findById(createOrderDto.customerId);
+    const customer = await this.customerModel.findById(createOrderDto.clienteId);
     
     if (!customer) {
       throw new NotFoundException('Cliente não encontrado. Verifique o ID.');
     }
 
-    const totalUSD = createOrderDto.items.reduce((acc, item) => {
-      return acc + (item.quantity * item.priceUnitPriceUSD);
+    const totalUSD = createOrderDto.itens.reduce((acc, item) => {
+      return acc + (item.quantidade * item.precoUnitarioUSD);
     }, 0);
 
     const rate = await this.currencyService.getUsdExchangeRate();
@@ -36,18 +36,18 @@ export class OrdersService {
 
     const newOrder = new this.orderModel({
       ...createOrderDto,
-      totalAmountUSD: totalUSD,
-      totalAmountBRL: totalBRL,
+      valorTotalUSD: totalUSD,
+      valorTotalBRL: totalBRL,
     });
 
     const savedOrder = await newOrder.save();
 
     const emailPayload = {
-      nome: customer.name,
+      nome: customer.nome,
       email: customer.email,
       pedidoId: savedOrder._id,
-      valorTotal: savedOrder.totalAmountBRL,
-      itens: savedOrder.items 
+      valorTotal: savedOrder.valorTotalBRL,
+      itens: savedOrder.itens 
     };
 
    
@@ -61,7 +61,7 @@ export class OrdersService {
     const skip = (pageNumber - 1) * limitNumber;
 
     const result = await this.orderModel.find()
-      .populate('customerId') 
+      .populate('clienteId') 
       .skip(skip)
       .limit(limitNumber)
       .exec();
@@ -70,22 +70,22 @@ export class OrdersService {
   }
 
   async findOne(id: string): Promise<Order> {
-    const order = await this.orderModel.findById(id).populate('customerId').exec();
+    const order = await this.orderModel.findById(id).populate('clienteId').exec();
     if (!order) throw new NotFoundException('Pedido não encontrado');
     return order;
   }
 
   async update(id: string, updateOrderDto: any): Promise<Order> {
-   if (updateOrderDto.items && updateOrderDto.items.length > 0) {
-      const totalUSD = updateOrderDto.items.reduce((acc, item) => {
-        return acc + (item.quantity * item.priceUnitPriceUSD);
+   if (updateOrderDto.itens && updateOrderDto.itens.length > 0) {
+      const totalUSD = updateOrderDto.itens.reduce((acc, item) => {
+        return acc + (item.quantidade * item.precoUnitarioUSD);
       }, 0);
 
       const rate = await this.currencyService.getUsdExchangeRate();
       const totalBRL = totalUSD * rate;
 
-      updateOrderDto['totalAmountUSD'] = totalUSD;
-      updateOrderDto['totalAmountBRL'] = totalBRL;
+      updateOrderDto['valorTotalUSD'] = totalUSD;
+      updateOrderDto['valorTotalBRL'] = totalBRL;
     }
 
     const updatedOrder = await this.orderModel

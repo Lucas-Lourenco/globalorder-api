@@ -4,31 +4,31 @@ import { Document, Types } from 'mongoose';
 @Schema()
 export class OrderItem {
   @Prop({ required: true })
-  product: string;
+  produto: string;
 
   @Prop({ required: true })
-  quantity: number;
+  quantidade: number;
 
   @Prop({ required: true })
-  priceUnitPriceUSD: number;
+  precoUnitarioUSD: number;
 }
 
 @Schema({ timestamps: true })
 export class Order extends Document {
   @Prop({ type: Types.ObjectId, ref: 'Customer', required: true })
-  customerId: Types.ObjectId;
+  clienteId: Types.ObjectId;
 
   @Prop({ required: true })
-  date: Date;
+  data: Date;
 
   @Prop({ type: [OrderItem], required: true })
-  items: OrderItem[];
+  itens: OrderItem[];
 
   @Prop({ required: true })
-  totalAmountUSD: number;
+  valorTotalUSD: number;
 
   @Prop({ required: true })
-  totalAmountBRL: number;
+  valorTotalBRL: number;
 
   @Prop({ default: null })
   comprovanteURL: string;

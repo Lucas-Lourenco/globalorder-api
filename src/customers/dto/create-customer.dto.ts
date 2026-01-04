@@ -5,7 +5,7 @@ export class CreateCustomerDto {
   @ApiProperty({ example: 'Lucas Lourenço' })
   @IsString()
   @IsNotEmpty()
-  name: string;
+  nome: string;
 
   @ApiProperty({ example: 'exemple@email.com' })
   @IsEmail()
@@ -14,5 +14,5 @@ export class CreateCustomerDto {
   @ApiProperty({ example: 'Brasil' })
   @IsString()
   @IsNotEmpty()
-  country: string;
+  pais: string;
 }

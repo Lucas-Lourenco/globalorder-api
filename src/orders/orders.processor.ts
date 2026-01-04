@@ -20,7 +20,7 @@ export class OrdersProcessor {
     if (itens && Array.isArray(itens)) {
       this.logger.debug('🛒 ITENS DO PEDIDO:');
       itens.forEach((item, index) => {
-        this.logger.debug(`   ${index + 1}. ${item.product} (x${item.quantity})`);
+        this.logger.debug(`   ${index + 1}. ${item.produto} (x${item.quantidade})`);
       });
     }
 

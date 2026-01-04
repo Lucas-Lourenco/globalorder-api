@@ -9,26 +9,26 @@ export class ReportsService {
 
   async getTopClients(limit: number = 5) {
     
-    const orders = await this.orderModel.find().populate('customerId').exec();
+    const orders = await this.orderModel.find().populate('clienteId').exec();
 
   
     const mapClientes = {};
 
     orders.forEach((order) => {
-      if (!order.customerId || !order.totalAmountBRL) return;
+      if (!order.clienteId || !order.valorTotalBRL) return;
 
-      const cliente: any = order.customerId;
+      const cliente: any = order.clienteId;
       const idCliente = cliente._id.toString();
 
       if (!mapClientes[idCliente]) {
         mapClientes[idCliente] = {
-          cliente: cliente.name,
+          cliente: cliente.nome,
           email: cliente.email,
           totalGastoEmReal: 0,
         };
       }
 
-      mapClientes[idCliente].totalGastoEmReal += order.totalAmountBRL;
+      mapClientes[idCliente].totalGastoEmReal += order.valorTotalBRL;
     });
 
     const ranking = Object.values(mapClientes)
