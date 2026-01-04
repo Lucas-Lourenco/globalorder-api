@@ -277,12 +277,6 @@ npm run start:prod         # Inicia a versão compilada
 npm run lint               # Executa ESLint
 npm run format             # Formata código com Prettier
 
-# Testes
-npm run test               # Executa testes
-npm run test:watch         # Executa testes em modo watch
-npm run test:cov           # Executa testes com cobertura
-npm run test:debug         # Executa testes em modo debug
-npm run test:e2e           # Executa testes end-to-end
 ```
 
 ## 📚 Documentação da API
@@ -297,7 +291,6 @@ Lá você encontrará:
 - Todos os endpoints disponíveis
 - Exemplos de requisição e resposta
 - Esquemas de dados
-- Autenticação (se aplicável)
 
 ## 🔒 Segurança
 
@@ -308,24 +301,6 @@ A aplicação implementa várias camadas de segurança:
 - **Validação**: Usa `class-validator` para validar dados de entrada
 - **Whitelist**: Apenas campos esperados são aceitos
 - **Transformação**: Dados são transformados automaticamente para os tipos corretos
-
-## 🧪 Testes
-
-Para executar os testes:
-
-```bash
-# Testes unitários
-npm run test
-
-# Testes em modo watch
-npm run test:watch
-
-# Cobertura de testes
-npm run test:cov
-
-# Testes end-to-end
-npm run test:e2e
-```
 
 ## 🌟 Padrões e Boas Práticas
 
